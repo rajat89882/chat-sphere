@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 13, 2025 at 06:48 AM
+-- Generation Time: Feb 27, 2025 at 01:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,21 +31,24 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `otp` int(11) NOT NULL,
   `image` varchar(255) NOT NULL DEFAULT 'https://cdn-icons-png.flaticon.com/128/2102/2102647.png',
   `password` varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL,
   `lat` varchar(255) NOT NULL,
   `long` varchar(255) NOT NULL,
-  `craeted_at` datetime NOT NULL DEFAULT current_timestamp()
+  `status` varchar(255) NOT NULL,
+  `craeted_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_login` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `email`, `image`, `password`, `location`, `lat`, `long`, `craeted_at`) VALUES
-(15, 'qq', 'amourette.no+01@gmail.com', 'https://cdn-icons-png.flaticon.com/128/2102/2102647.png', 'Abcd@123', 'Ghurlu Nala Bridge,,Dharamshala,Himachal Pradesh,176200', '32.1931275', '76.3484025', '2025-01-31 15:15:53'),
-(16, 'Test Kumar', 'testk805@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocLV9Zknl0bPmBU6wix6h7N2rWe6nq7_frsYnbivJR0VIWNPDQ=s96-c', '', 'Ghurlu Nala Bridge,,Dharamshala,Himachal Pradesh,176200', '32.1931276', '76.3483988', '2025-01-31 16:41:01');
+INSERT INTO `user` (`id`, `name`, `email`, `otp`, `image`, `password`, `location`, `lat`, `long`, `status`, `craeted_at`, `last_login`) VALUES
+(25, 'Test', 'avinayquicktech@gmail.com', 435181, 'https://lh3.googleusercontent.com/a/ACg8ocKWDDzxDt3BtvVSvAzrOeGKJmSDnfdJ0LqkQpbENREbG20fvBDI=s96-c', 'Abcd@123', ',,Dharamshala,Himachal Pradesh,176200', '32.1930841', '76.3484496', 'verify', '2025-02-26 17:32:57', '2025-02-27 11:50:43'),
+(42, 'Test Kumar', 'testk805@gmail.com', 0, 'https://lh3.googleusercontent.com/a/ACg8ocLV9Zknl0bPmBU6wix6h7N2rWe6nq7_frsYnbivJR0VIWNPDQ=s96-c', '', ',,Dharamshala,Himachal Pradesh,176200', '32.1930841', '76.3484496', 'verify', '2025-02-27 11:52:28', '2025-02-27 11:52:28');
 
 --
 -- Indexes for dumped tables
@@ -65,7 +68,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
