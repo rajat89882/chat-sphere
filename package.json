@@ -43,3 +43,137 @@
     ]
   }
 }
+
+
+const Stripe = require("stripe");
+const stripe = new Stripe(
+  "testkey"
+);
+
+exports.checkoutpayy = async (req, res) => {
+  const { plan } = req.body;
+  try {
+    let productId;
+    let priceId;
+
+    switch (plan) {
+      case "BASIC":
+        productId = "prod_RgE3FhSl8b2bBA";
+        priceId = "price_1QmrbLAQYHZn8ah9URQGm8Kq";
+        break;
+      case "PRO":
+        productId = "prod_RgE3ZRKXk0zYld";
+        priceId = "price_1QmrbpAQYHZn8ah96ak9boc6";
+        break;
+      case "VIP":
+        productId = "prod_RgE4fzKIFDYzLF";
+        priceId = "price_1QmrceAQYHZn8ah9mUNqahg0";
+        break;
+      default:
+        return res.status(400).json({ error: "Invalid plan selected" });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      success_url: `https://amourette.no/setting?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://amourette.no/setting?canceled=true`,
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("Error creating checkout session", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+  const handleredirect = async (day, am, plan, productId) => {
+    console.log("dd", productId);
+    let payData = {
+      days: day,
+      amount: am,
+      plan: plan,
+      productId: productId,
+    };
+    localStorage.setItem("paydata", JSON.stringify(payData));
+    const currentUrl = window.location.pathname;
+    setLoading(true);
+    const response = await axios.post(apiURL + "checkoutpay", payData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json", // Ensure the content type is JSON
+      },
+    });
+    // Call backend to create a checkout session
+    // const response = await fetch(apiURL + "checkoutpay", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+
+    var url = response.data.url;
+
+    // Redirect user to Stripe Checkout
+    window.location.href = url;
+
+    setLoading(false);
+  };
+
+     <div className="row gy-4 justify-content-center">
+       <div className="col-md-4">
+         <div className="planbox d-flex flex-column gap-3">
+           <h1>{`${t("Basic")}`}</h1>
+           <h2>30 days: 89 NOK</h2>
+           <p>{`${t("basic_desc")}`}</p>
+           <button
+             type="button"
+             onClick={() =>
+               handleredirect("30", "89", "BASIC", "prod_RgE3FhSl8b2bBA")
+             }
+           >
+             {`${t("get_started")}`}
+           </button>
+          
+         </div>
+       </div>
+       <div className="col-md-4">
+         <div className="planbox d-flex flex-column gap-3">
+           <h1>{`${t("pro")}`}</h1>
+           <h2>90 days: 229 NOK</h2>
+           <p>{`${t("pro_desc")}`}</p>
+           <button
+             type="button"
+             onClick={() =>
+               handleredirect("90", "229", "PRO", "prod_RgE3ZRKXk0zYld")
+             }
+           >
+             {`${t("get_started")}`}
+           </button>
+          
+         </div>
+       </div>
+       <div className="col-md-4">
+         <div className="planbox d-flex flex-column gap-3">
+           <h1>{`${t("vip")}`}</h1>
+           <h2>365 days: 749 NOK</h2>
+           <p>{`${t("vip_desc")}`}</p>
+           <button
+             type="button"
+             onClick={() =>
+               handleredirect("365", "749", "VIP", "prod_RgE4fzKIFDYzLF")
+             }
+           >
+             {`${t("get_started")}`}
+           </button>
+          
+         </div>
+       </div>
+     </div>;
